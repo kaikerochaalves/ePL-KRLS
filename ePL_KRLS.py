@@ -14,9 +14,6 @@ class ePL_KRLS:
     def __init__(self, alpha = 0.001, beta = 0.05, lambda1 = 0.0000001, sigma = 0.5, nu = 0.25, tau = 0.05, e_utility = 0.05, d_max = 20):
         self.hyperparameters = pd.DataFrame({'alpha':[alpha],'beta':[beta], 'lambda1':[lambda1], 'sigma':[sigma], 'nu':[nu], 'tau':[tau], 'e_utility':[e_utility], 'd_max':[d_max]})
         self.parameters = pd.DataFrame(columns = ['Center', 'Dictionary', 'nu', 'P', 'K_inv', 'Theta','ArousalIndex', 'Utility', 'SumLambda', 'TimeCreation', 'CompatibilityMeasure', 'OldCenter', 'tau', 'lambda', 'Old'])
-        # Parameters used to calculate the utility measure
-        self.epsilon = []
-        self.eTil = [0.]
         # Evolution of the model rules
         self.rules = []
         # Computing the output in the training phase
@@ -60,10 +57,12 @@ class ePL_KRLS:
             if self.parameters.shape[0] > 1:
                 self.Utility_Measure(X[k,], k+1)
             self.rules.append(self.parameters.shape[0])
-            # Finding the maximum compatibility measure
-            MaxIndexCompatibility = self.parameters['CompatibilityMeasure'].astype('float64').idxmax()
             if self.NewRule == 0:
-                self.KRLS(x, y[k], MaxIndexCompatibility, k+1)
+                for row in self.parameters.index:
+                    self.KRLS(x, y[k], row, k+1)
+            else:
+                for row in range(self.parameters.shape[0] - 1):
+                    self.KRLS(x, y[k], self.parameters.index[row], k+1)
             # Computing the output
             Output = 0
             for row in self.parameters.index:
@@ -71,12 +70,8 @@ class ePL_KRLS:
                 for ni in range(self.parameters.loc[row, 'Dictionary'].shape[1]):
                     yi = yi + self.parameters.loc[row, 'Theta'][ni] * self.Kernel_Gaussiano(self.parameters.loc[row, 'Dictionary'][:,ni].reshape(-1,1), x)
                 Output = Output + yi * self.parameters.loc[row, 'lambda']
-            #Output = Output / sum(self.parameters['lambda'])
             self.OutputTrainingPhase = np.append(self.OutputTrainingPhase, Output)
             self.ResidualTrainingPhase = np.append(self.ResidualTrainingPhase,(Output - y[k])**2)
-            # Updating epsilon and e_til
-            #self.epsilon.append(math.exp(-0.5) * (2/(math.exp(-0.8 * self.eTil[-1] - abs(Output - y[k]))) - 1))
-            #self.eTil.append(0.8 * self.eTil[-1] + abs(Output - y[k]))
         return self.OutputTrainingPhase, self.rules
             
     def predict(self, X):
@@ -86,8 +81,6 @@ class ePL_KRLS:
             # Computing the compatibility measure
             for i in self.parameters.index:
                 self.Compatibility_Measure(x, i)
-            # Finding the maximum compatibility measure
-            #MaxIndexCompatibility = self.parameters['CompatibilityMeasure'].astype('float64').idxmax()
             self.Lambda(x)
             # Computing the output
             Output = 0
@@ -96,7 +89,6 @@ class ePL_KRLS:
                 for ni in range(self.parameters.loc[row, 'Dictionary'].shape[1]):
                     yi = yi + self.parameters.loc[row, 'Theta'][ni] * self.Kernel_Gaussiano(self.parameters.loc[row, 'Dictionary'][:,ni].reshape(-1,1), x)
                 Output = Output + yi * self.parameters.loc[row, 'lambda']
-            #Output = Output / sum(self.parameters['lambda'])
             self.OutputTestPhase = np.append(self.OutputTestPhase, Output)
         return self.OutputTestPhase
         
