@@ -63,14 +63,17 @@ Normalized_y_train, Normalized_y_test = Normalized_y[:training_size], Normalized
 #-----------------------------------------------------------------------------
 
 # Setting the hyperparameters
-alpha = 0.05
-beta = 0.04
-lambda1 = 0.0000000001
+alpha = 0.5
+tau = 0.06
+beta = 0.4
+lambda1 = 0.0000001
 sigma = 0.5
-e_utility = 0.05
+nu = 0.4
+e_utility = 0.03
+d_max = 100
 
 # Initializing the model
-model = ePL_KRLS(alpha = alpha, beta = beta, lambda1 = lambda1, sigma = sigma, tau = beta, e_utility = e_utility)
+model = ePL_KRLS(alpha = alpha, beta = beta, lambda1 = lambda1, sigma = sigma, nu = nu, tau = tau, e_utility = e_utility, d_max = d_max)
 # Train the model
 OutputTraining, Rules = model.fit(Normalized_X_train, Normalized_y_train)
 

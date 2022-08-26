@@ -95,16 +95,17 @@ plt.show()
 #-----------------------------------------------------------------------------
 
 # Setting the hyperparameters
-alpha = 0.001
-beta = 0.6
-lambda1 = 0.1
-sigma = 1.5
+alpha = 0.5
+tau = 0.04
+beta = 0.4
+lambda1 = 0.0000001
+sigma = 0.5
 nu = 0.5
-e_utility = 0.05
-d_max = 30
+e_utility = 0.03
+d_max = 100
 
 # Initializing the model
-model = ePL_KRLS(alpha = alpha, beta = beta, lambda1 = lambda1, sigma = sigma, nu = nu, tau = beta, e_utility = e_utility, d_max = d_max)
+model = ePL_KRLS(alpha = alpha, beta = beta, lambda1 = lambda1, sigma = sigma, nu = nu, tau = tau, e_utility = e_utility, d_max = d_max)
 # Train the model
 OutputTraining, Rules = model.fit(Normalized_X_train, Normalized_y_train)
 # Test the model

@@ -33,9 +33,9 @@ class ePL_KRLS:
         # Initialize the first rule
         self.Initialize_First_Cluster(x, y[0])
         for k in range(1, X.shape[0]):
-            print(k)
-            if k == 41:
-                print(k)
+            # print(k)
+            # if k == 7439:
+            #     print(k)
             self.NewRule = 0
             # Prepare the k-th input vector
             x = X[k,].reshape((1,-1)).T
@@ -57,6 +57,10 @@ class ePL_KRLS:
             if self.parameters.shape[0] > 1:
                 self.Utility_Measure(X[k,], k+1)
             self.rules.append(self.parameters.shape[0])
+            # # Finding the maximum compatibility measure
+            # MaxIndexCompatibility = self.parameters['CompatibilityMeasure'].astype('float64').idxmax()
+            # if self.NewRule == 0:
+            #     self.KRLS(x, y[k], MaxIndexCompatibility, k+1)    
             if self.NewRule == 0:
                 for row in self.parameters.index:
                     self.KRLS(x, y[k], row, k+1)
@@ -111,7 +115,7 @@ class ePL_KRLS:
         return math.exp(-((((np.linalg.norm(Vector1-Vector2))**2)/(2*self.hyperparameters.loc[0, 'sigma']**2))))
     
     def Compatibility_Measure(self, x, i):
-        self.parameters.at[i, 'CompatibilityMeasure'] = (1 - ((np.linalg.norm(x - self.parameters.loc[i, 'Center']))/x.shape[0])) * ( ( np.corrcoef(self.parameters.loc[i, 'Center'].T, x.T)[0,1] + 1) / 2 )
+        self.parameters.at[i, 'CompatibilityMeasure'] = (1 - ((np.linalg.norm(x - self.parameters.loc[i, 'Center']))/x.shape[0]))
             
     def Arousal_Index(self, i):
         self.parameters.at[i, 'ArousalIndex'] = self.parameters.loc[i, 'ArousalIndex'] + self.hyperparameters.loc[0, 'beta'] * (1 - self.parameters.loc[i, 'CompatibilityMeasure'] - self.parameters.loc[i, 'ArousalIndex'])
@@ -196,8 +200,9 @@ class ePL_KRLS:
             self.parameters.at[i, 'Theta'] = self.parameters.loc[i, 'Theta'] - ( (a/delta) * EstimatedError )
             self.parameters.at[i, 'Theta'] = np.vstack([self.parameters.loc[i, 'Theta'], (1/delta) * EstimatedError])
         else:
-            d_old = np.argmin(self.parameters.loc[i, 'Old'], axis=1)
-            self.parameters.at[i, 'Dictionary'][:,d_old] = x
+            # d_old = np.argmin(self.parameters.loc[i, 'Old'], axis=1)
+            # self.parameters.at[i, 'Old'][0, d_old] = k
+            # self.parameters.at[i, 'Dictionary'][:,d_old] = x
             # Calculating q
             q = np.matmul(self.parameters.loc[i, 'P'], a)/(1 + np.matmul(np.matmul(a.T, self.parameters.loc[i, 'P']), a))
             # Updating P
