@@ -32,4 +32,4 @@ The paper [3] has a complete review of the eFSs.
 
 [2] Vieira, R., Gomide, F., & Ballini, R. (2018, July). Kernel evolving participatory fuzzy modeling for time series forecasting. In 2018 IEEE International Conference on Fuzzy Systems (FUZZ-IEEE) (pp. 1-9). IEEE.
 
-[3] K.S.T.R. Alves, E. P. Aguiar, A novel rule-based evolving Fuzzy System applied to the thermal modeling of power transformers. Appl. Soft Comput. 112 (2021) 107764-107764, https://doi.org/10.1016/j.asoc.2021.
+[3] K.S.T.R. Alves, E. P. Aguiar, A novel rule-based evolving Fuzzy System applied to the thermal modeling of power transformers. Appl. Soft Comput. 112 (2021) 107764-107764, https://doi.org/10.1016/j.asoc.2021.107764.
